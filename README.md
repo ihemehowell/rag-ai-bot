@@ -1,36 +1,88 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# RAG Bot (Codespaces Setup)
 
-## Getting Started
+This project is a Next.js app for uploading PDFs, embedding chunked text, storing vectors in Pinecone, and chatting over retrieved context with Groq.
 
-First, run the development server:
+## Quick Start in GitHub Codespaces
+
+1. Open this repository in a new Codespace.
+2. In the Codespaces terminal, install dependencies:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+corepack enable
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+3. Create an environment file:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+cp .env.local.example .env.local
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+If `.env.local.example` does not exist yet, create `.env.local` manually using the template below.
 
-## Learn More
+4. Start the app:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+pnpm dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+5. Open the forwarded port for `3000` in Codespaces and visit the app.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Required Environment Variables
 
-## Deploy on Vercel
+Create `.env.local` in the project root with:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```env
+PINECONE_API_KEY=your_pinecone_api_key
+PINECONE_INDEX=your_pinecone_index_name
+GROQ_API_KEY=your_groq_api_key
+GROQ_MODEL=llama-3.1-8b-instant
+EMBEDDING_DIMENSION=384
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Notes
+
+- `EMBEDDING_DIMENSION` must match your Pinecone index dimension.
+- Default in this app is `384`.
+- `GROQ_MODEL` is optional. If omitted, the app uses `llama-3.1-8b-instant`.
+
+## Recommended Codespaces Secrets
+
+Instead of committing sensitive values, add these as Codespaces repository secrets:
+
+- `PINECONE_API_KEY`
+- `PINECONE_INDEX`
+- `GROQ_API_KEY`
+- `GROQ_MODEL` (optional)
+- `EMBEDDING_DIMENSION` (optional)
+
+Then write them into `.env.local` inside the Codespace.
+
+## Scripts
+
+- `pnpm dev` - start local development server
+- `pnpm build` - build for production
+- `pnpm start` - run production build
+- `pnpm lint` - run ESLint
+
+## How to Use
+
+1. Launch the app in Codespaces.
+2. Upload a PDF in the UI.
+3. Ask questions in the chat panel.
+4. The app retrieves relevant chunks from Pinecone and answers using Groq.
+
+## Troubleshooting
+
+- If upload fails, verify the file is a valid PDF.
+- If chat responses are empty or low quality, confirm vectors were inserted into the configured Pinecone index.
+- If you get dimension errors from Pinecone, align `EMBEDDING_DIMENSION` with index config.
+- If model calls fail, recheck `GROQ_API_KEY` and model availability.
+
+## Tech Stack
+
+- Next.js (App Router)
+- React
+- LangChain
+- Pinecone
+- Groq
